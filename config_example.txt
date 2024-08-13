@@ -1,0 +1,11 @@
+width: 100
+height: 300
+base x: -10
+base y: -50
+step x: 0,25
+step y: 0,5
+graph height symbols: ⣀⡠⠤⠔⠒⠊⠉
+background char: ⠀
+number of expressions: 1
+(COS(x))^(0.5)
+LOG_x(10)
