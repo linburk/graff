@@ -37,9 +37,9 @@ int is_function(enum operator_id id) {
 int scan_number(const char *expr, unsigned long expr_len, unsigned *i,
                 char *buffer, unsigned *buffer_size) {
   for (char WAS_DOT = 0;
-       *i < expr_len && (expr[*i] == '.' || isdigit(expr[*i])); ++(*i)) {
+       *i < expr_len && (expr[*i] == ',' || isdigit(expr[*i])); ++(*i)) {
     buffer[(*buffer_size)++] = expr[*i];
-    if (expr[*i] == '.') {
+    if (expr[*i] == ',') {
       if (WAS_DOT) {
         return -1;
       }
@@ -59,7 +59,7 @@ struct token scan_next_token(const char *expr, unsigned long expr_len,
   result.data_len = 0;
   for (; *i < expr_len && (iscntrl(expr[*i]) || isspace(expr[*i])); ++(*i))
     ; // skip minor chars
-  if (isdigit(expr[*i]) || expr[*i] == '.') {
+  if (isdigit(expr[*i]) || expr[*i] == ',') {
     int err = scan_number(expr, expr_len, i, buffer, &buffer_size);
     if (err == -1) {
       return result;
