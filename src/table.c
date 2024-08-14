@@ -27,7 +27,6 @@ struct screen initialize_screen(unsigned long width, unsigned long height,
 
   return result;
 }
-
 void initialize_axes(struct screen *scr, long double base_x, long double base_y,
                      long double diff_x, long double diff_y, unsigned ord_freq,
                      unsigned abs_freq) {
@@ -37,13 +36,15 @@ void initialize_axes(struct screen *scr, long double base_x, long double base_y,
   scr->diff_y = diff_y;
   int ord_ax = -1, abs_ax = -1;
   for (unsigned i = 0; i < scr->width; ++i) {
-    long double x_pos = scr->base_x + i * scr->diff_x;
-    if (x_pos + EPS > 0 && x_pos - EPS < 0)
+    long double x_pos_prev = scr->base_x + (i - 1) * scr->diff_x;
+    long double x_pos_next = scr->base_x + (i + 1) * scr->diff_x;
+    if (x_pos_prev < 0 && 0 < x_pos_next)
       ord_ax = i;
   }
   for (unsigned j = 0; j < scr->height; ++j) {
-    long double y_pos = scr->base_y + j * scr->diff_y;
-    if (y_pos + EPS > 0 && y_pos - EPS < 0)
+    long double y_pos_prev = scr->base_y + (j - 1) * scr->diff_y;
+    long double y_pos_next = scr->base_y + (j + 1) * scr->diff_y;
+    if (y_pos_prev < 0 && 0 < y_pos_next)
       abs_ax = j;
   }
   if (ord_ax != -1)
@@ -85,6 +86,8 @@ void draw_graph(struct screen *scr, struct token *rpn_expr,
   for (long double x = scr->base_x; x < max_x && i < scr->width;
        x += scr->diff_x, ++i) {
     long double y = evaluate(x, rpn_expr, expr_len);
+    if (isnan(y))
+      continue;
     long double y_c = y;
     if (y >= scr->base_y && y < max_y) {
       unsigned p = 0;

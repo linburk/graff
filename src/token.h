@@ -3,20 +3,22 @@
 #define TOKEN_H
 enum token_id {
   ERROR,
+  EMPTY,
   VARIABLE, // only x
-  OPERATOR,
+  FUNCTION,
   NUMBER,
   L_PARENTHESIS,
   R_PARENTHESIS,
+  SEPARATOR,
   TOKEN_TYPES_COUNT,
 };
 
-enum operator_id {
-  NOT_AN_OPERATOR,
-  PLUS,
-  MINUS, // always right-associavity
-  MULTIPLY,
-  DIVIDE,
+enum function_id {
+  NOT_AN_FUNCTION,
+  ADD,
+  SUB, // always right-associavity
+  MULT,
+  DIV,
   EXP,
   SIN,
   COS,
@@ -28,13 +30,12 @@ enum operator_id {
   ACOT,
   LOG,
   DER,
-  OPERATORS_COUNT,
+  FUNCTIONS_COUNT,
 };
 
 struct token {
   enum token_id id;
-  enum operator_id op;
-  char *data;
-  unsigned long data_len;
+  enum function_id op;
+  long double val;
 };
 #endif

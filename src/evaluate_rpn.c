@@ -2,72 +2,72 @@
 #include "math.h"
 #include "stdio.h"
 #include "stdlib.h"
-
 double EPS;
 
 long double evaluate(long double x, struct token *rpn_expr,
                      unsigned long expr_len) {
   long double *stack = (long double *)(calloc(expr_len, sizeof(long double)));
   unsigned stack_size = 0;
+  long double first, second;
   for (unsigned i = 0; i < expr_len; ++i) {
     switch (rpn_expr[i].id) {
     case NUMBER:
-      sscanf(rpn_expr[i].data, "%Lf", &stack[stack_size++]);
+      stack[stack_size++] = rpn_expr[i].val;
       break;
     case VARIABLE:
       stack[stack_size++] = x;
       break;
-    case OPERATOR:
+    case FUNCTION:
       switch (rpn_expr[i].op) {
-        long double first, second;
-      case PLUS:
+      case ADD:
         if (stack_size < 2) {
           free(stack);
           return 0;
         }
         first = stack[--stack_size];
         second = stack[--stack_size];
-        stack[stack_size++] = first + second;
+        stack[stack_size++] = second + first;
         break;
-      case MINUS:
+      case SUB:
         if (stack_size < 1) {
           free(stack);
           return 0;
         }
         first = stack[--stack_size];
-        stack[stack_size++] = -first;
+        second = stack[--stack_size];
+        stack[stack_size++] = second - first;
         break;
-      case MULTIPLY:
+      case MULT:
         if (stack_size < 2) {
           free(stack);
           return 0;
         }
         first = stack[--stack_size];
         second = stack[--stack_size];
-        stack[stack_size++] = first * second;
+        stack[stack_size++] = second * first;
         break;
-      case DIVIDE:
+      case DIV:
         if (stack_size < 2) {
           free(stack);
           return 0;
         }
         first = stack[--stack_size];
         second = stack[--stack_size];
-        stack[stack_size++] = first != 0 ? second / first : 0;
+        stack[stack_size++] = first != 0 ? (second / first) : NAN;
         break;
       case EXP:
         if (stack_size < 2) {
           free(stack);
           return 0;
         }
-        EPS = 1E-5;
+        EPS = 1E-7;
         first = stack[--stack_size];
         second = stack[--stack_size];
         int pow_r = round(first);
         if (first + EPS > pow_r && first - EPS < pow_r) {
           stack[stack_size++] = pow(second, pow_r);
         } else {
-          stack[stack_size++] = second > 0 ? pow(second, first) : 0;
+          stack[stack_size++] = second > 0 ? pow(second, first) : NAN;
         }
         break;
       case SIN:
@@ -92,7 +92,7 @@ long double evaluate(long double x, struct token *rpn_expr,
           return 0;
         }
         first = stack[--stack_size];
-        stack[stack_size++] = cos(first) != 0 ? tan(first) : 0;
+        stack[stack_size++] = cos(first) != 0 ? tan(first) : NAN;
         break;
       case COT:
         if (stack_size < 1) {
@@ -100,29 +100,25 @@ long double evaluate(long double x, struct token *rpn_expr,
           return 0;
         }
         first = stack[--stack_size];
-        stack[stack_size++] = sin(first) != 0 ? 1 / tan(first) : 0;
+        stack[stack_size++] = sin(first) != 0 ? 1 / tan(first) : NAN;
         break;
       case LOG:
         if (stack_size < 1) {
           free(stack);
           return 0;
         }
-        if (rpn_expr[i].data[0] == 'x') {
-          second = x;
-        } else {
-          sscanf(rpn_expr[i].data, "%Lf", &second);
-        }
         first = stack[--stack_size];
+        second = stack[--stack_size];
         stack[stack_size++] = first > 0 && second > 0 && second != 1
                                   ? log2(first) / log2(second)
-                                  : 0;
+                                  : NAN;
         break;
       case DER:
         if (stack_size < 1) {
           free(stack);
           return 0;
         }
-        EPS = 1E-2;
+        EPS = 1E-5;
         first = stack[--stack_size];
         second = evaluate(x + EPS, rpn_expr, i);
         stack[stack_size++] = (second - first) / EPS;
@@ -132,7 +128,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       break;
     }
   }
-  long double result = stack[0];
+  long double result = stack[stack_size - 1];
   free(stack);
   return result;
 }
