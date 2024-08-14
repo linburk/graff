@@ -4,10 +4,6 @@
 
 #define EPS 1E-5
 
-#define EPS 1E-5
-
-#define EPS 1E-5
-
 struct screen initialize_screen(unsigned long width, unsigned long height,
                                 wchar_t filler) {
   struct screen result;
@@ -59,7 +55,6 @@ void initialize_axes(struct screen *scr, long double base_x, long double base_y,
   }
 }
 void draw_graph(struct screen *scr, struct token *rpn_expr,
-<<<<<<< HEAD
                 unsigned long expr_len, const wchar_t *l_sign,
                 unsigned long l_sign_len, const wchar_t *r_sign,
                 unsigned long r_sign_len) {
@@ -69,14 +64,6 @@ void draw_graph(struct screen *scr, struct token *rpn_expr,
   long double l_step = scr->diff_y / l_sign_len;
   long double r_step = scr->diff_y / r_sign_len;
   long double prev_y = 0;
-                unsigned long expr_len, const wchar_t *sign,
-                unsigned long sign_len) {
-  long double max_x = scr->base_x + scr->width * scr->diff_x - EPS;
-  long double max_y = scr->base_y + scr->height * scr->diff_y - EPS;
-  unsigned i = 0;
-  unsigned j = 0;
-  unsigned p = 0;
-  long double step = scr->diff_y / sign_len;
   for (long double x = scr->base_x; x < max_x && i < scr->width;
        x += scr->diff_x, ++i) {
     long double y = evaluate(x, rpn_expr, expr_len);
