@@ -6,6 +6,8 @@
 
 #define EPS 1E-5
 
+#define EPS 1E-5
+
 struct screen initialize_screen(unsigned long width, unsigned long height,
                                 wchar_t filler) {
   struct screen result;
