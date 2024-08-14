@@ -3,6 +3,8 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+double EPS;
+
 long double evaluate(long double x, struct token *rpn_expr,
                      unsigned long expr_len) {
   long double *stack = (long double *)(calloc(expr_len, sizeof(long double)));
@@ -58,9 +60,15 @@ long double evaluate(long double x, struct token *rpn_expr,
           free(stack);
           return 0;
         }
+        EPS = 1E-5;
         first = stack[--stack_size];
         second = stack[--stack_size];
-        stack[stack_size++] = second > 0 ? pow(second, first) : 0;
+        int pow_r = round(first);
+        if (first + EPS > pow_r && first - EPS < pow_r) {
+          stack[stack_size++] = pow(second, first);
+        } else {
+          stack[stack_size++] = second > 0 ? pow(second, first) : 0;
+        }
         break;
       case SIN:
         if (stack_size < 1) {
@@ -114,7 +122,7 @@ long double evaluate(long double x, struct token *rpn_expr,
           free(stack);
           return 0;
         }
-        const double EPS = 0.125;
+        EPS = 1E-2;
         first = stack[--stack_size];
         second = evaluate(x + EPS, rpn_expr, i);
         stack[stack_size++] = (second - first) / EPS;
