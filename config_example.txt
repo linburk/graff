@@ -7,6 +7,8 @@ step y: 0,2
 increasing symbols: ⣀⡠⠤⠔⠒⠊⠉
 decreasing symbols: ⣀⢄⠤⠢⠒⠑⠉
 background char: ⠀
+frequency of ord. axe marks(0 to off): 0
+frequency of abs. axe marks(0 to off): 0
 number of expressions: 2
 COS(x)
 LOG_x(10)

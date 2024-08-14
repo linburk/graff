@@ -1,5 +1,6 @@
 #include "table.h"
 #include "evaluate_rpn.h"
+#include "math.h"
 #include "stdlib.h"
 
 #define EPS 1E-5
@@ -28,7 +29,8 @@ struct screen initialize_screen(unsigned long width, unsigned long height,
 }
 
 void initialize_axes(struct screen *scr, long double base_x, long double base_y,
-                     long double diff_x, long double diff_y) {
+                     long double diff_x, long double diff_y, unsigned ord_freq,
+                     unsigned abs_freq) {
   scr->base_x = base_x;
   scr->base_y = base_y;
   scr->diff_x = diff_x;
@@ -45,11 +47,27 @@ void initialize_axes(struct screen *scr, long double base_x, long double base_y,
       abs_ax = j;
   }
   if (abs_ax != -1)
-    for (unsigned j = 0; j < scr->height; ++j)
-      scr->table[ord_ax][j] = L'┃';
+    for (unsigned j = 0; j < scr->height; ++j) {
+      if (ord_freq != 0 &&
+          (int)round(fabsl(scr->base_y - scr->diff_y * j) / scr->diff_y) %
+                  ord_freq ==
+              0) {
+        scr->table[ord_ax][j] = L'╂';
+      } else {
+        scr->table[ord_ax][j] = L'┃';
+      }
+    }
   if (ord_ax != -1)
-    for (unsigned i = 0; i < scr->width; ++i)
-      scr->table[i][abs_ax] = L'━';
+    for (unsigned i = 0; i < scr->width; ++i) {
+      if (abs_freq != 0 &&
+          (int)round(fabsl(scr->base_x - scr->diff_x * i) / scr->diff_x) %
+                  abs_freq ==
+              0) {
+        scr->table[i][abs_ax] = L'┿';
+      } else {
+        scr->table[i][abs_ax] = L'━';
+      }
+    }
   if (abs_ax != -1 && ord_ax != -1) {
     scr->table[ord_ax][abs_ax] = L'╋';
   }
@@ -89,11 +107,14 @@ void draw_graph(struct screen *scr, struct token *rpn_expr,
 }
 
 void print_screen(struct screen scr) {
+  // PRINT TOP ORNAMENT
   wprintf(L"╔");
   for (unsigned i = 0; i < scr.width + 1; ++i) {
     wprintf(L"═");
   }
   wprintf(L"╗\n");
+  // PRINT TOP ORNAMENT
+  // PRINT TABLE
   for (int j = scr.height - 1; j >= 0; --j) {
     wprintf(L"║");
     for (unsigned i = 0; i < scr.width; ++i) {
@@ -101,12 +122,15 @@ void print_screen(struct screen scr) {
     }
     wprintf(L" ║ Y = %Lf\n", scr.base_y + scr.diff_y * j);
   }
+  // PRINT TABLE
+  // PRINT BOTTOM ORNAMENT
   wprintf(L"╚");
   for (unsigned i = 0; i < scr.width + 1; ++i) {
     wprintf(L"═");
   }
   wprintf(L"╝");
   wprintf(L"\n");
+  // PRINT BOTTOM ORNAMENT
   wprintf(L"BASE X: %Lf\t", scr.base_x);
   wprintf(L"BASE Y: %Lf\n", scr.base_y);
   wprintf(L"DIFF X: %Lf\t", scr.diff_x);
