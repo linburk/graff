@@ -65,7 +65,7 @@ long double evaluate(long double x, struct token *rpn_expr,
         second = stack[--stack_size];
         int pow_r = round(first);
         if (first + EPS > pow_r && first - EPS < pow_r) {
-          stack[stack_size++] = pow(second, first);
+          stack[stack_size++] = pow(second, pow_r);
         } else {
           stack[stack_size++] = second > 0 ? pow(second, first) : 0;
         }
