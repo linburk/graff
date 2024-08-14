@@ -15,3 +15,4 @@
 символ, заполняющий фон,
 число выражений для отрисовки,
 сами выражения
+<img width="1439" alt="example" src="https://github.com/user-attachments/assets/ffdeced9-1483-4d5c-8fb4-70b72259e6bf">
