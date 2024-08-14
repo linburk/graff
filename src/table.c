@@ -1,8 +1,10 @@
 #include "table.h"
 #include "evaluate_rpn.h"
-#include "stdio.h"
 #include "stdlib.h"
-#include <wchar.h>
+
+#define EPS 1E-5
+
+#define EPS 1E-5
 
 struct screen initialize_screen(unsigned long width, unsigned long height,
                                 wchar_t filler) {
@@ -33,7 +35,6 @@ void initialize_axes(struct screen *scr, long double base_x, long double base_y,
   scr->base_y = base_y;
   scr->diff_x = diff_x;
   scr->diff_y = diff_y;
-  const double EPS = 1E-5;
   int ord_ax = -1, abs_ax = -1;
   for (unsigned i = 0; i < scr->width; ++i) {
     long double x_pos = scr->base_x + i * scr->diff_x;
@@ -56,25 +57,45 @@ void initialize_axes(struct screen *scr, long double base_x, long double base_y,
   }
 }
 void draw_graph(struct screen *scr, struct token *rpn_expr,
+<<<<<<< HEAD
+                unsigned long expr_len, const wchar_t *l_sign,
+                unsigned long l_sign_len, const wchar_t *r_sign,
+                unsigned long r_sign_len) {
+  long double max_x = scr->base_x + scr->width * scr->diff_x - EPS;
+  long double max_y = scr->base_y + scr->height * scr->diff_y - EPS;
+  unsigned i = 0;
+  long double l_step = scr->diff_y / l_sign_len;
+  long double r_step = scr->diff_y / r_sign_len;
+  long double prev_y = 0;
                 unsigned long expr_len, const wchar_t *sign,
                 unsigned long sign_len) {
-  long double max_x = scr->base_x + scr->width * scr->diff_x;
-  long double max_y = scr->base_y + scr->height * scr->diff_y;
+  long double max_x = scr->base_x + scr->width * scr->diff_x - EPS;
+  long double max_y = scr->base_y + scr->height * scr->diff_y - EPS;
   unsigned i = 0;
   unsigned j = 0;
   unsigned p = 0;
   long double step = scr->diff_y / sign_len;
-  for (long double x = scr->base_x; x < max_x; x += scr->diff_x, ++i) {
+  for (long double x = scr->base_x; x < max_x && i < scr->width;
+       x += scr->diff_x, ++i) {
     long double y = evaluate(x, rpn_expr, expr_len);
+    long double y_c = y;
     if (y >= scr->base_y && y < max_y) {
-      j = (y - scr->base_y) / scr->diff_y; // close position
-      p = 0;
+      unsigned p = 0;
+      unsigned j = (y - scr->base_y) / scr->diff_y; // close position
       y -= scr->base_y + scr->diff_y * j;
-      for (; y > 0 && p < sign_len - 1; y -= step) {
-        ++p;
+      if (prev_y < y_c) {
+        for (; y > 0 && p < l_sign_len - 1; y -= l_step) {
+          ++p;
+        }
+        scr->table[i][j] = l_sign[p];
+      } else {
+        for (; y > 0 && p < r_sign_len - 1; y -= r_step) {
+          ++p;
+        }
+        scr->table[i][j] = r_sign[p];
       }
-      scr->table[i][j] = sign[p];
     }
+    prev_y = y_c;
   }
 }
 
