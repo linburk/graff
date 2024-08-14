@@ -46,7 +46,7 @@ void initialize_axes(struct screen *scr, long double base_x, long double base_y,
     if (y_pos + EPS > 0 && y_pos - EPS < 0)
       abs_ax = j;
   }
-  if (abs_ax != -1)
+  if (ord_ax != -1)
     for (unsigned j = 0; j < scr->height; ++j) {
       if (ord_freq != 0 &&
           (int)round(fabsl(scr->base_y - scr->diff_y * j) / scr->diff_y) %
@@ -57,7 +57,7 @@ void initialize_axes(struct screen *scr, long double base_x, long double base_y,
         scr->table[ord_ax][j] = L'┃';
       }
     }
-  if (ord_ax != -1)
+  if (abs_ax != -1)
     for (unsigned i = 0; i < scr->width; ++i) {
       if (abs_freq != 0 &&
           (int)round(fabsl(scr->base_x - scr->diff_x * i) / scr->diff_x) %
