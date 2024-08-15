@@ -44,7 +44,6 @@ int main() {
     char expr[LINE_BUFFER_SIZE];
     fgets(expr, LINE_BUFFER_SIZE, graph_settings);
     unsigned long len = 0;
-    printf("%s", expr);
     struct token *res = tokenize(expr, strlen(expr), &len);
     if (res == NULL) {
       printf("Wrong expression\n");
