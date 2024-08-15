@@ -11,13 +11,15 @@ struct token scan_next_token(const char *expr, unsigned long expr_len,
   result.op = NOT_AN_FUNCTION;
   for (; *i < expr_len && isspace(expr[*i]); ++(*i))
     ; // skip minor chars
-  if (*i == expr_len) {
+  if (*i >= expr_len) {
     result.id = EMPTY;
     return result;
   }
   if (isdigit(expr[*i])) {
     result.id = NUMBER;
-    *i += sscanf(&expr[*i], "%Lf", &result.val);
+    unsigned c_scanned = 0;
+    sscanf(&expr[*i], "%Lf%n", &result.val, &c_scanned);
+    *i += c_scanned;
     return result;
   }
   if (expr[*i] == '(' || expr[*i] == ')') {
@@ -99,37 +101,37 @@ struct token scan_next_token(const char *expr, unsigned long expr_len,
   }
   if (*i + 2 < expr_len && expr[*i] == 'L' && expr[*i + 1] == 'O' &&
       expr[*i + 2] == 'G') {
-    *i += 3;
     result.id = FUNCTION;
     result.op = LOG;
+    *i += 3;
     return result;
   }
   if (*i + 3 < expr_len && expr[*i] == 'A' && expr[*i + 1] == 'C' &&
       expr[*i + 2] == 'O' && expr[*i + 3] == 'S') {
     result.id = FUNCTION;
     result.op = ACOS;
-    *i += 3;
+    *i += 4;
     return result;
   }
   if (*i + 3 < expr_len && expr[*i] == 'A' && expr[*i + 1] == 'S' &&
       expr[*i + 2] == 'I' && expr[*i + 3] == 'N') {
     result.id = FUNCTION;
     result.op = ASIN;
-    *i += 3;
+    *i += 4;
     return result;
   }
   if (*i + 3 < expr_len && expr[*i] == 'A' && expr[*i + 1] == 'T' &&
       expr[*i + 2] == 'A' && expr[*i + 3] == 'N') {
     result.id = FUNCTION;
     result.op = ATAN;
-    *i += 3;
+    *i += 4;
     return result;
   }
   if (*i + 3 < expr_len && expr[*i] == 'A' && expr[*i + 1] == 'C' &&
       expr[*i + 2] == 'O' && expr[*i + 3] == 'T') {
     result.id = FUNCTION;
     result.op = ACOT;
-    *i += 3;
+    *i += 4;
     return result;
   }
   if (*i + 2 < expr_len && expr[*i] == 'D' && expr[*i + 1] == 'E' &&
