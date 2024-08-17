@@ -76,22 +76,26 @@ void initialize_axes(struct screen *scr, long double base_x, long double base_y,
 void draw_graph(struct screen *scr, struct token *rpn_expr,
                 unsigned long expr_len, const wchar_t *l_sign,
                 unsigned long l_sign_len, const wchar_t *r_sign,
-                unsigned long r_sign_len) {
+                unsigned long r_sign_len, const wchar_t *v_sign) {
   long double max_x = scr->base_x + scr->width * scr->diff_x - EPS;
   long double max_y = scr->base_y + scr->height * scr->diff_y - EPS;
   unsigned i = 0;
   long double l_step = scr->diff_y / l_sign_len;
   long double r_step = scr->diff_y / r_sign_len;
   long double prev_y = 0;
+  signed prev_j = -1;
   for (long double x = scr->base_x; x < max_x && i < scr->width;
        x += scr->diff_x, ++i) {
     long double y = evaluate(x, rpn_expr, expr_len);
-    if (isnan(y))
+    if (isnan(y)) {
+      prev_j = -1;
       continue;
+    }
     long double y_c = y;
+    unsigned p = 0;
+    signed j = (y - scr->base_y) / scr->diff_y; // close position
+    j = j < 0 ? 0 : j;
     if (y >= scr->base_y && y < max_y) {
-      unsigned p = 0;
-      unsigned j = (y - scr->base_y) / scr->diff_y; // close position
       y -= scr->base_y + scr->diff_y * j;
       if (prev_y < y_c) {
         for (; y > 0 && p < l_sign_len - 1; y -= l_step) {
@@ -105,35 +109,54 @@ void draw_graph(struct screen *scr, struct token *rpn_expr,
         scr->table[i][j] = r_sign[p];
       }
     }
+    if (prev_j != -1 && v_sign[0] != L'$') {
+      const wchar_t VERTICAL_CONNECTOR_LEFT = v_sign[0];
+      const wchar_t VERTICAL_CONNECTOR_RIGHT = v_sign[1];
+      signed CURR = j < scr->height ? j : scr->height;
+      signed PREV = prev_j > 0 ? prev_j : 0;
+      PREV = PREV > scr->height ? scr->height : PREV;
+      if (CURR < PREV) {
+        for (signed t_j = CURR + 1; t_j < PREV; ++t_j) {
+          scr->table[i - 1][t_j] = VERTICAL_CONNECTOR_LEFT;
+        }
+      } else {
+        for (signed t_j = PREV + 1; t_j < CURR; ++t_j) {
+          scr->table[i - 1][t_j] = VERTICAL_CONNECTOR_RIGHT;
+        }
+      }
+    }
+    prev_j = j;
     prev_y = y_c;
   }
 }
 
 void print_screen(struct screen scr) {
-  // PRINT TOP ORNAMENT
-  wprintf(L"╔");
+  //
+  const wchar_t LEFT_ANGLE_TOP_ORNAMENT = L'╔';
+  const wchar_t RIGHT_ANGLE_TOP_ORNAMENT = L'╗';
+  const wchar_t LEFT_ANGLE_BOTTOM_ORNAMENT = L'╚';
+  const wchar_t RIGHT_ANGLE_BOTTOM_ORNAMENT = L'╝';
+  const wchar_t HORIZONTAL_ORNAMENT = L'═';
+  const wchar_t VERTICAL_ORNAMENT = L'║';
+  //
+  wprintf(L"%lc", LEFT_ANGLE_TOP_ORNAMENT);
   for (unsigned i = 0; i < scr.width + 1; ++i) {
-    wprintf(L"═");
+    wprintf(L"%lc", HORIZONTAL_ORNAMENT);
   }
-  wprintf(L"╗\n");
-  // PRINT TOP ORNAMENT
-  // PRINT TABLE
+  wprintf(L"%lc\n", RIGHT_ANGLE_TOP_ORNAMENT);
   for (int j = scr.height - 1; j >= 0; --j) {
-    wprintf(L"║");
+    wprintf(L"%lc", VERTICAL_ORNAMENT);
     for (unsigned i = 0; i < scr.width; ++i) {
       wprintf(L"%lc", scr.table[i][j]);
     }
-    wprintf(L" ║ Y = %Lf\n", scr.base_y + scr.diff_y * j);
+    wprintf(L" %lc Y = %Lf\n", VERTICAL_ORNAMENT, scr.base_y + scr.diff_y * j);
   }
-  // PRINT TABLE
-  // PRINT BOTTOM ORNAMENT
-  wprintf(L"╚");
+  wprintf(L"%lc", LEFT_ANGLE_BOTTOM_ORNAMENT);
   for (unsigned i = 0; i < scr.width + 1; ++i) {
-    wprintf(L"═");
+    wprintf(L"%lc", HORIZONTAL_ORNAMENT);
   }
-  wprintf(L"╝");
-  wprintf(L"\n");
-  // PRINT BOTTOM ORNAMENT
+  wprintf(L"%lc\n", RIGHT_ANGLE_BOTTOM_ORNAMENT);
+
   wprintf(L"BASE X: %Lf\t", scr.base_x);
   wprintf(L"BASE Y: %Lf\n", scr.base_y);
   wprintf(L"DIFF X: %Lf\t", scr.diff_x);

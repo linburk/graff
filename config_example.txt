@@ -1,14 +1,16 @@
-width: 100
+width: 180
 height: 100
-base x: -1
-base y: -7
-step x: 0,1
-step y: 0,2
+base x: -5
+base y: -10
+step x: 0.1
+step y: 0.25
 increasing symbols: ⣀⡠⠤⠔⠒⠊⠉
 decreasing symbols: ⣀⢄⠤⠢⠒⠑⠉
+2 vertical symbols('$' to off): ⠇⠸
 background char: ⠀
-frequency of ord. axe marks(0 to off): 0
-frequency of abs. axe marks(0 to off): 0
-number of expressions: 2
+frequency of ord. axe marks(0 to off): 4
+frequency of abs. axe marks(0 to off): 10
+number of expressions: 3
+SUB(0, x)
 COS(x)
-LOG(10, x)
+EXP(x, 2)

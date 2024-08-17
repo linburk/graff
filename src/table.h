@@ -30,7 +30,7 @@ void initialize_axes(struct screen *scr, long double base_x, long double base_y,
 void draw_graph(struct screen *scr, struct token *rpn_expr,
                 unsigned long expr_len, const wchar_t *l_sign,
                 unsigned long l_sign_len, const wchar_t *r_sign,
-                unsigned long r_sign_len);
+                unsigned long r_sign_len, const wchar_t *v_sign);
 
 void print_screen(struct screen scr);
 
