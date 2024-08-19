@@ -3,12 +3,11 @@
 #define PARSER_H
 #include "token.h"
 
-#define BASE_TOKEN_LENGTH 256
+#define MAX_TOKEN_LENGTH 256
 
-struct token *tokenize(const char *expr, unsigned long expr_len,
-                       unsigned long *size);
+struct token *tokenize(const char *expr, unsigned expr_len, unsigned *size);
 
-struct token *reverse_polish_notation(struct token *input, unsigned long in_len,
-                                      unsigned long *out_len);
+struct token *reverse_polish_notation(struct token *input, unsigned in_len,
+                                      unsigned *out_len);
 
 #endif

@@ -1,6 +1,7 @@
 #pragma once
 #ifndef TOKEN_H
 #define TOKEN_H
+
 enum token_id {
   ERROR,
   EMPTY,
@@ -16,7 +17,7 @@ enum token_id {
 enum function_id {
   NOT_AN_FUNCTION,
   ADD,
-  SUB, // always right-associavity
+  SUB,
   MULT,
   DIV,
   EXP,
@@ -38,4 +39,5 @@ struct token {
   enum function_id op;
   long double val;
 };
+
 #endif

@@ -1,9 +1,17 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(math_analyzer LANGUAGES C)
+project(graff LANGUAGES C)
 set(C_STANDARD 11)
 
-add_executable(graph src/main.c src/table.c src/parser.c src/evaluate_rpn.c)
+find_package(SDL2 REQUIRED)
+include_directories(graff ${SDL2_INCLUDE_DIRS})
 
-set_target_properties(graph PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-                                       "${CMAKE_BINARY_DIR}/../bin")
+add_executable(graff 
+    src/main.c
+    src/parser.c
+    src/evaluate_rpn.c
+    src/interface/tui.c
+    src/interface/gui.c 
+)
+target_link_libraries(graff ${SDL2_LIBRARIES})
+set_target_properties(graff PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../bin")

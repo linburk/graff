@@ -7,6 +7,10 @@ double EPS;
 long double evaluate(long double x, struct token *rpn_expr,
                      unsigned long expr_len) {
   long double *stack = (long double *)(calloc(expr_len, sizeof(long double)));
+  if (stack == NULL) {
+    fprintf(stderr, "CALLOC ERROR\n");
+    abort();
+  }
   unsigned stack_size = 0;
   long double first, second;
   for (unsigned i = 0; i < expr_len; ++i) {
@@ -22,7 +26,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case ADD:
         if (stack_size < 2) {
           free(stack);
-          return 0;
+          return NAN;
         }
         first = stack[--stack_size];
         second = stack[--stack_size];
@@ -31,7 +35,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case SUB:
         if (stack_size < 1) {
           free(stack);
-          return 0;
+          return NAN;
         }
         first = stack[--stack_size];
         second = stack[--stack_size];
@@ -40,7 +44,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case MULT:
         if (stack_size < 2) {
           free(stack);
-          return 0;
+          return NAN;
         }
         first = stack[--stack_size];
         second = stack[--stack_size];
@@ -49,7 +53,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case DIV:
         if (stack_size < 2) {
           free(stack);
-          return 0;
+          return NAN;
         }
         first = stack[--stack_size];
         second = stack[--stack_size];
@@ -58,7 +62,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case EXP:
         if (stack_size < 2) {
           free(stack);
-          return 0;
+          return NAN;
         }
         EPS = 1E-7;
         first = stack[--stack_size];
@@ -73,7 +77,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case SIN:
         if (stack_size < 1) {
           free(stack);
-          return 0;
+          return NAN;
         }
         first = stack[--stack_size];
         stack[stack_size++] = sin(first);
@@ -81,7 +85,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case COS:
         if (stack_size < 1) {
           free(stack);
-          return 0;
+          return NAN;
         }
         first = stack[--stack_size];
         stack[stack_size++] = cos(first);
@@ -89,7 +93,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case TAN:
         if (stack_size < 1) {
           free(stack);
-          return 0;
+          return NAN;
         }
         first = stack[--stack_size];
         stack[stack_size++] = cos(first) != 0 ? tan(first) : NAN;
@@ -97,7 +101,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case COT:
         if (stack_size < 1) {
           free(stack);
-          return 0;
+          return NAN;
         }
         first = stack[--stack_size];
         stack[stack_size++] = sin(first) != 0 ? 1 / tan(first) : NAN;
@@ -105,7 +109,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case LOG:
         if (stack_size < 1) {
           free(stack);
-          return 0;
+          return NAN;
         }
         first = stack[--stack_size];
         second = stack[--stack_size];
@@ -116,7 +120,7 @@ long double evaluate(long double x, struct token *rpn_expr,
       case DER:
         if (stack_size < 1) {
           free(stack);
-          return 0;
+          return NAN;
         }
         EPS = 1E-7;
         first = stack[--stack_size];
@@ -128,7 +132,8 @@ long double evaluate(long double x, struct token *rpn_expr,
       break;
     }
   }
-  long double result = stack[stack_size - 1];
+  long double result =
+      stack_size > 0 && stack_size <= expr_len ? stack[stack_size - 1] : NAN;
   free(stack);
   return result;
 }

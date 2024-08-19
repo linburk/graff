@@ -4,8 +4,7 @@
 #include "stdlib.h"
 #include "token.h"
 
-struct token scan_next_token(const char *expr, unsigned long expr_len,
-                             unsigned *i) {
+struct token scan_next_token(const char *expr, unsigned expr_len, unsigned *i) {
   struct token result;
   result.id = ERROR;
   result.op = NOT_AN_FUNCTION;
@@ -144,10 +143,13 @@ struct token scan_next_token(const char *expr, unsigned long expr_len,
   return result;
 }
 
-struct token *tokenize(const char *expr, unsigned long expr_len,
-                       unsigned long *size) {
+struct token *tokenize(const char *expr, unsigned expr_len, unsigned *size) {
   struct token *result =
-      (struct token *)(calloc(BASE_TOKEN_LENGTH, sizeof(struct token)));
+      (struct token *)(calloc(MAX_TOKEN_LENGTH, sizeof(struct token)));
+  if (result == NULL) {
+    fprintf(stderr, "CALLOC ERROR\n");
+    abort();
+  }
   for (unsigned i = 0; i < expr_len;) {
     struct token next_token = scan_next_token(expr, expr_len, &i);
     if (next_token.id == EMPTY)
@@ -161,11 +163,19 @@ struct token *tokenize(const char *expr, unsigned long expr_len,
   return result;
 }
 
-struct token *reverse_polish_notation(struct token *input, unsigned long in_len,
-                                      unsigned long *out_len) {
+struct token *reverse_polish_notation(struct token *input, unsigned in_len,
+                                      unsigned *out_len) {
   struct token *stack = (struct token *)(calloc(in_len, sizeof(struct token)));
+  if (stack == NULL) {
+    fprintf(stderr, "CALLOC ERROR\n");
+    abort();
+  }
   unsigned stack_size = 0;
   struct token *output = (struct token *)(calloc(in_len, sizeof(struct token)));
+  if (output == NULL) {
+    fprintf(stderr, "CALLOC ERROR\n");
+    abort();
+  }
   for (unsigned i = 0; i < in_len; ++i) {
     switch (input[i].id) {
     case VARIABLE:
