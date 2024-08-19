@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
       graph.rpn_expr[i] =
           reverse_polish_notation(expr, expr_len, &graph.rpn_expr_len[i]);
       free(expr);
-      if (graph.rpn_expr == NULL) {
+      if (graph.rpn_expr[i] == NULL) {
         fclose(params);
         fprintf(stderr, "RPN ERROR\n");
         for (unsigned j = 0; j < i; ++j)
