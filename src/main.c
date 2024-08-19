@@ -76,5 +76,8 @@ int main(int argc, char **argv) {
   } else {
     gui(graph);
   }
+  for (unsigned i = 0; i < graph.graph_count; ++i) {
+    free(graph.rpn_expr[i]);
+  }
   return 0;
 }
