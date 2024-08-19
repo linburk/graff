@@ -77,6 +77,7 @@ void renderGraph(SDL_Renderer *renderer, const struct graph_params graph) {
       if (ord > 1 && SDL_RenderDrawLines(renderer, points, ord) != 0)
         ERR(SDL_RenderDrawLines, 0);
     }
+    free(points);
   }
 }
 

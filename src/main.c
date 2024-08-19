@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
   if (argc > 1) {
     FILE *params = fopen(argv[1], "r");
     if (params == NULL) {
-      fprintf(stderr, "FORMULS FILE OPEN ERROR\n");
+      fprintf(stderr, "FILE OPEN ERROR\n");
       return 0;
     }
     fscanf(params,
