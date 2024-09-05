@@ -26,115 +26,114 @@ struct token scan_next_token(const char *expr, unsigned expr_len, unsigned *i) {
       result.id = L_PARENTHESIS;
     if (expr[*i] == ')')
       result.id = R_PARENTHESIS;
-    ++(*i);
+    *i += 1;
     return result;
   }
   if (expr[*i] == ',') {
     result.id = SEPARATOR;
-    ++(*i);
+    *i += 1;
     return result;
   }
   if (expr[*i] == 'x') {
     result.id = VARIABLE;
-    ++(*i);
+    *i += 1;
     return result;
   }
-  if (*i + 2 && expr[*i] == 'A' && expr[*i + 1] == 'D' && expr[*i + 2] == 'D') {
+  if (expr[*i] == '+') {
     result.id = FUNCTION;
     result.op = ADD;
-    *i += 3;
+    *i += 1;
     return result;
   }
-  if (*i + 2 && expr[*i] == 'S' && expr[*i + 1] == 'U' && expr[*i + 2] == 'B') {
+  if (expr[*i] == '-') {
     result.id = FUNCTION;
     result.op = SUB;
-    *i += 3;
+    *i += 1;
     return result;
   }
-  if (*i + 3 && expr[*i] == 'M' && expr[*i + 1] == 'U' && expr[*i + 2] == 'L' &&
-      expr[*i + 3] == 'T') {
+  if (expr[*i] == '*') {
     result.id = FUNCTION;
     result.op = MULT;
-    *i += 4;
+    *i += 1;
     return result;
   }
-  if (*i + 2 && expr[*i] == 'D' && expr[*i + 1] == 'I' && expr[*i + 2] == 'V') {
+  if (expr[*i] == '/') {
     result.id = FUNCTION;
     result.op = DIV;
-    *i += 3;
+    *i += 1;
     return result;
   }
-  if (*i + 2 && expr[*i] == 'E' && expr[*i + 1] == 'X' && expr[*i + 2] == 'P') {
+  if (expr[*i] == '^') {
     result.id = FUNCTION;
     result.op = EXP;
-    *i += 3;
+    *i += 1;
     return result;
   }
-  if (*i + 2 < expr_len && expr[*i] == 'S' && expr[*i + 1] == 'I' &&
-      expr[*i + 2] == 'N') {
+  if (*i + 2 < expr_len && expr[*i] == 's' && expr[*i + 1] == 'i' &&
+      expr[*i + 2] == 'n') {
     result.id = FUNCTION;
     result.op = SIN;
     *i += 3;
     return result;
   }
-  if (*i + 2 < expr_len && expr[*i] == 'C' && expr[*i + 1] == 'O' &&
-      expr[*i + 2] == 'S') {
+  if (*i + 2 < expr_len && expr[*i] == 'c' && expr[*i + 1] == 'o' &&
+      expr[*i + 2] == 's') {
     result.id = FUNCTION;
     result.op = COS;
     *i += 3;
     return result;
   }
-  if (*i + 2 < expr_len && expr[*i] == 'T' && expr[*i + 1] == 'A' &&
-      expr[*i + 2] == 'N') {
+  if (*i + 2 < expr_len && expr[*i] == 't' && expr[*i + 1] == 'a' &&
+      expr[*i + 2] == 'n') {
     result.id = FUNCTION;
     result.op = TAN;
     *i += 3;
     return result;
   }
-  if (*i + 2 < expr_len && expr[*i] == 'C' && expr[*i + 1] == 'O' &&
-      expr[*i + 2] == 'T') {
+  if (*i + 2 < expr_len && expr[*i] == 'c' && expr[*i + 1] == 'o' &&
+      expr[*i + 2] == 't') {
     result.id = FUNCTION;
     result.op = COT;
     *i += 3;
     return result;
   }
-  if (*i + 2 < expr_len && expr[*i] == 'L' && expr[*i + 1] == 'O' &&
-      expr[*i + 2] == 'G') {
+  if (*i + 2 < expr_len && expr[*i] == 'l' && expr[*i + 1] == 'o' &&
+      expr[*i + 2] == 'g') {
     result.id = FUNCTION;
     result.op = LOG;
     *i += 3;
     return result;
   }
-  if (*i + 3 < expr_len && expr[*i] == 'A' && expr[*i + 1] == 'C' &&
-      expr[*i + 2] == 'O' && expr[*i + 3] == 'S') {
+  if (*i + 3 < expr_len && expr[*i] == 'a' && expr[*i + 1] == 'c' &&
+      expr[*i + 2] == 'o' && expr[*i + 3] == 's') {
     result.id = FUNCTION;
     result.op = ACOS;
     *i += 4;
     return result;
   }
-  if (*i + 3 < expr_len && expr[*i] == 'A' && expr[*i + 1] == 'S' &&
-      expr[*i + 2] == 'I' && expr[*i + 3] == 'N') {
+  if (*i + 3 < expr_len && expr[*i] == 'a' && expr[*i + 1] == 's' &&
+      expr[*i + 2] == 'i' && expr[*i + 3] == 'n') {
     result.id = FUNCTION;
     result.op = ASIN;
     *i += 4;
     return result;
   }
-  if (*i + 3 < expr_len && expr[*i] == 'A' && expr[*i + 1] == 'T' &&
-      expr[*i + 2] == 'A' && expr[*i + 3] == 'N') {
+  if (*i + 3 < expr_len && expr[*i] == 'a' && expr[*i + 1] == 't' &&
+      expr[*i + 2] == 'a' && expr[*i + 3] == 'n') {
     result.id = FUNCTION;
     result.op = ATAN;
     *i += 4;
     return result;
   }
-  if (*i + 3 < expr_len && expr[*i] == 'A' && expr[*i + 1] == 'C' &&
-      expr[*i + 2] == 'O' && expr[*i + 3] == 'T') {
+  if (*i + 3 < expr_len && expr[*i] == 'a' && expr[*i + 1] == 'c' &&
+      expr[*i + 2] == 'o' && expr[*i + 3] == 't') {
     result.id = FUNCTION;
     result.op = ACOT;
     *i += 4;
     return result;
   }
-  if (*i + 2 < expr_len && expr[*i] == 'D' && expr[*i + 1] == 'E' &&
-      expr[*i + 2] == 'R') {
+  if (*i + 2 < expr_len && expr[*i] == 'd' && expr[*i + 1] == 'e' &&
+      expr[*i + 2] == 'r') {
     result.id = FUNCTION;
     result.op = DER;
     *i += 3;

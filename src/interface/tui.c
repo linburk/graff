@@ -167,7 +167,7 @@ void print_screen(struct tui_viewport scr, struct graph_params graph) {
       wprintf(L"%lc", scr.table[i][j]);
     }
     wprintf(L" %lc Y = %Lf\n", VERTICAL_ORNAMENT,
-            graph.base_y + j * graph.diff_x);
+            graph.base_y + j * graph.diff_y);
   }
   wprintf(L"%lc", LEFT_ANGLE_BOTTOM_ORNAMENT);
   for (unsigned i = 0; i < scr.width + 1; ++i) {

@@ -1,0 +1,12 @@
+width: 150
+height: 40
+base x: -3
+base y: -1
+step x: 0.05
+step y: 0.1
+frequency of ord. axe marks(0 to off): 4
+frequency of abs. axe marks(0 to off): 10
+3
+der(^(x, 2))
+sin(x)
+^(x, x)
