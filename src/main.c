@@ -81,6 +81,10 @@ int main(int argc, char **argv) {
     printf("Enter relative path to config:\n");
     scanf("%s", config_path);
     FILE *params = fopen(config_path, "r");
+    if (params == NULL) {
+      fprintf(stderr, "FILE OPEN ERROR\n");
+      return 0;
+    }
     if (scan_expr(params, &graph) == 1)
       abort();
     fclose(params);
