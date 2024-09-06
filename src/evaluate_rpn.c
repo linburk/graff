@@ -127,6 +127,8 @@ long double evaluate(long double x, struct token *rpn_expr,
         second = evaluate(x + EPS, rpn_expr, i);
         stack[stack_size++] = (second - first) / EPS;
         break;
+      default:
+        break;
       }
     default:
       break;

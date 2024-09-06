@@ -8,9 +8,14 @@
 #define MAX_HEIGHT 5000
 #define MAX_WIDTH 5000
 
+#define COMMON_BASE_X -3.6
+#define COMMON_BASE_Y -2.1
+#define COMMON_DIFF_X 0.005
+#define COMMON_DIFF_Y 0.005
+
 struct graph_params {
-  unsigned width;
-  unsigned height;
+  int width;
+  int height;
   unsigned abs_freq;
   unsigned ord_freq;
   long double base_x;

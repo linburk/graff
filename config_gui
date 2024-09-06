@@ -1,11 +1,3 @@
-width: 1024
-height: 768
-base x: -7
-base y: -4
-step x: 0.005
-step y: 0.005
-frequency of ord. axe marks(0 to off): 4
-frequency of abs. axe marks(0 to off): 10
 5
 ^(x, 2)
 ^(x, 3)
